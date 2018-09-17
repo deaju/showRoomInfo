@@ -1,0 +1,16 @@
+<div class="row split">
+  <div class="col s12 m8 split-item split-left">
+    <div class="card split-left__inner">
+      <div class="card-image">
+        <canvas #canvas width="450"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col s12 m4 split-item split-right">
+    <div class="collection">
+      <a href="#!" class="collection-item" *ngFor="let date of dates;let i=index">
+        <div (click)="setDateOnGraph(i)">{{date}}</div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.split{
+    display: table;
+    width: 100%;    
+}
+.split-item{
+    display: table-cell;
+    padding: 0px;
+    width: 100%;
+}
+.split-left{
+    color: #fff;
+    position: relative;
+}
+.split-left__inner{
+    position: fixed;
+    width: 66%;
+}
