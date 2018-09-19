@@ -8,7 +8,7 @@
   </div>
   <div class="col s12 m4 split-item split-right">
     <div class="collection">
-      <a href="#!" class="collection-item" *ngFor="let date of dates;let i=index">
+      <a href="#!" *ngFor="let date of dates;let i=index" [ngClass]="{'collection-item': true,'active':isActive(i)}">
         <div (click)="setDateOnGraph(i)">{{date}}</div>
       </a>
     </div>

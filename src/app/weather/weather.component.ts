@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Chart, ChartData, ChartOptions } from 'chart.js';
+import { RoomInfoService } from '../room-info.service'
 
 @Component({
   selector: 'app-weather',
@@ -20,26 +21,40 @@ export class WeatherComponent implements OnInit,AfterViewInit {
   context: CanvasRenderingContext2D;
   chart: Chart;
   dates: string[];
+  selectIndex:number = 0;
 
-  constructor() { }
+  constructor(private roomInfo:RoomInfoService) { }
 
   ngOnInit() {
-    this.setDate();
-    this.dates= ["a","b","c"]
+    this.initDate();
+    this.dates= [];
+    this.roomInfo.getDate().subscribe((dates:string[])=>{
+      this.dates = dates;
+     this.setData(dates[this.selectIndex]);
+    });
   }
-  private setDate(){
+  private setData(date:string){
+    this.roomInfo.getRoomInfo(date)
+    .subscribe((roomInfo)=>{
+      this.data.labels = roomInfo['date'];
+      this.data.datasets[0].data = roomInfo['humidity'];
+      this.data.datasets[1].data = roomInfo['temp'];
+      this.chart.update();
+    });
+  }
+  private initDate(){
     this.data = {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      labels: [],
       datasets: [{
-        label: '',
-        data: [12, 19, 3, 5, 2, 3],
+        label: 'humidity',
+        data: [],
         borderColor: 'rgb(255, 0, 0)',
         lineTension: 0, //<===追加
         fill: false,    //<===追加
       },
       {
-        label: '',
-        data: [13, 10, 3, 5, 2, 3],
+        label: 'temperature',
+        data: [],
         borderColor: 'rgb(255, 8, 8)',
         lineTension: 0, //<===追加
         fill: false,    //<===追加
@@ -69,9 +84,14 @@ export class WeatherComponent implements OnInit,AfterViewInit {
     });
   }
 
-  setDateOnGraph(index:Number){
-    this.data.datasets[index]['data'] = [1, 1, 10, 10, 10, 10];
+  setDateOnGraph(index:number){
+    this.selectIndex = index;
+    let date = this.dates[index];
+    this.setData(date);
     this.chart.update();
+  }
+  isActive(index:number){
+    return this.selectIndex == index;
   }
 
 }
