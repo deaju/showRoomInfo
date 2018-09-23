@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef} from '@angular/core';
 import { Chart, ChartData, ChartOptions } from 'chart.js';
 import { RoomInfoService } from '../room-info.service'
 
@@ -48,14 +48,14 @@ export class WeatherComponent implements OnInit,AfterViewInit {
       datasets: [{
         label: 'humidity',
         data: [],
-        borderColor: 'rgb(255, 0, 0)',
+        borderColor: 'rgb(223, 215, 0)',
         lineTension: 0, //<===追加
         fill: false,    //<===追加
       },
       {
         label: 'temperature',
         data: [],
-        borderColor: 'rgb(255, 8, 8)',
+        borderColor: 'rgb(255, 163, 0)',
         lineTension: 0, //<===追加
         fill: false,    //<===追加
       }]
@@ -68,19 +68,23 @@ export class WeatherComponent implements OnInit,AfterViewInit {
             beginAtZero:true
           }
         }]
-      }
+      },
+      responsive: true
     };
   }
 
   ngAfterViewInit() {
     // canvasを取得
     this.context = this.ref.nativeElement.getContext('2d');
+    this.context.canvas.height = window.innerHeight / 3;
 
     // チャートの作成
+    Chart.defaults.global.defaultFontColor = 'white';
     this.chart = new Chart(this.context, {
       type: 'line',     // とりあえず doughnutチャートを表示
       data: this.data,      // データをプロパティとして渡す
-      options: this.options // オプションをプロパティとして渡す
+      options: this.options, // オプションをプロパティとして渡す
+      fontColor:'white'
     });
   }
 
