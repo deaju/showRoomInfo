@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef} from '@angular/core';
-import { Chart, ChartData, ChartOptions } from 'chart.js';
 import { RoomInfoService } from '../room-info.service'
 
 @Component({
@@ -7,84 +6,48 @@ import { RoomInfoService } from '../room-info.service'
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.css']
 })
-export class WeatherComponent implements OnInit,AfterViewInit {
-
-  @ViewChild('canvas')
-  ref: ElementRef;
-
-  @Input()
-  data: ChartData;
-
-  @Input()
-  options: ChartOptions;
-
-  context: CanvasRenderingContext2D;
-  chart: Chart;
+export class WeatherComponent implements OnInit {
   dates: string[];
   selectIndex:number = 0;
-
+  label1: string[];
+  datas1 = [[],[]];
+  label2: string[];
+  datas2 = [[],[]];
+  datas3 = [[]];
+  tempYAxes = [{
+    ticks: {
+      min: 0,                   //最小値
+      max: 100,                  //最大値
+      stepSize: 10               //軸間隔
+    }
+  }];
+  presureYAxes = [{
+    ticks: {
+      beginAtZero:false
+    }
+  }];
   constructor(private roomInfo:RoomInfoService) { }
 
   ngOnInit() {
-    this.initDate();
     this.dates= [];
     this.roomInfo.getDate().subscribe((dates:string[])=>{
       this.dates = dates;
-     this.setData(dates[this.selectIndex]);
+      this.setData(dates[0]);
     });
   }
   private setData(date:string){
     this.roomInfo.getRoomInfo(date)
     .subscribe((roomInfo)=>{
-      this.data.labels = roomInfo['date'];
-      this.data.datasets[0].data = roomInfo['humidity'];
-      this.data.datasets[1].data = roomInfo['temp'];
-      this.chart.update();
+      this.label1 = roomInfo['date'];
+      this.datas1[0] = roomInfo['humidity'];
+      this.datas1[1] = roomInfo['temp'];
     });
-  }
-  private initDate(){
-    this.data = {
-      labels: [],
-      datasets: [{
-        label: 'humidity',
-        data: [],
-        borderColor: 'rgb(223, 215, 0)',
-        lineTension: 0, //<===追加
-        fill: false,    //<===追加
-      },
-      {
-        label: 'temperature',
-        data: [],
-        borderColor: 'rgb(255, 163, 0)',
-        lineTension: 0, //<===追加
-        fill: false,    //<===追加
-      }]
-    };
-
-    this.options = {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero:true
-          }
-        }]
-      },
-      responsive: true
-    };
-  }
-
-  ngAfterViewInit() {
-    // canvasを取得
-    this.context = this.ref.nativeElement.getContext('2d');
-    this.context.canvas.height = window.innerHeight / 3;
-
-    // チャートの作成
-    Chart.defaults.global.defaultFontColor = 'white';
-    this.chart = new Chart(this.context, {
-      type: 'line',     // とりあえず doughnutチャートを表示
-      data: this.data,      // データをプロパティとして渡す
-      options: this.options, // オプションをプロパティとして渡す
-      fontColor:'white'
+    this.roomInfo.getWeatherInfo(date)
+    .subscribe((weatherInfo)=>{
+      this.label2 = weatherInfo['date'];
+      this.datas2[0] = weatherInfo['humidity'];
+      this.datas2[1] = weatherInfo['temp'];
+      this.datas3[0] = weatherInfo['pressure'];
     });
   }
 
@@ -92,7 +55,6 @@ export class WeatherComponent implements OnInit,AfterViewInit {
     this.selectIndex = index;
     let date = this.dates[index];
     this.setData(date);
-    this.chart.update();
   }
   isActive(index:number){
     return this.selectIndex == index;

@@ -5,19 +5,13 @@
 .split-item{
     display: table-cell;
     padding: 0px;
-    width: 100%;
 }
 .split-left{
-    color: rgba(0,115,140,0.8);
     height: 100%;
-    background:  rgba(0, 71, 87, 0.87);
+    width: 100%;
     position: relative;
 }
-.split-left__inner{
-    position: fixed;
-    width: 66%;
-}
-
-.ras-chart{
-    background:  linear-gradient(to bottom, rgba(0, 71, 87, 0.87), rgba(0,115,140,0.8));
+.split-right{
+    left: 0;
+    position: sticky;
 }

@@ -39,5 +39,22 @@ def getRoomInfo(date):
         room["date"].append(date.strftime('%H:%M:%S'))
     return jsonify(results=room)
 
+@app.route('/dashbord/api/weather-info/<date>',methods=['GET'])
+def getWeatherInfo(date):
+    targetDate=dt.datetime.strptime(date, '%Y-%m-%d')
+    tomorrowDate = targetDate + dt.timedelta(days=1)
+    connection = psycopg2.connect("host=192.168.0.116 port=5432 dbname=room user=postgres password=postgres")
+    cur = connection.cursor()
+    cur.execute("select * from weather_info_from_openweather where date>=%s and date < %s",[targetDate,tomorrowDate])
+    results = cur.fetchall()
+    room={"temp":[],"humidity":[],"pressure":[],"date":[]}
+    for result in results:
+        temp,humidity,pressure,date=result
+        room["temp"].append(temp)
+        room["humidity"].append(humidity)
+        room["pressure"].append(pressure)
+        room["date"].append(date.strftime('%H:%M:%S'))
+    return jsonify(results=room)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8090)

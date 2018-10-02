@@ -6,10 +6,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RoomInfoService {
-
   constructor(private http:Http) { }
   getRoomInfo(date:String):Observable<any>{
     let url = "http://192.168.0.116"+"/dashbord/api/room-info/"+date;
+    return new Observable((observer)=>{
+      this.http.get(url)
+      .subscribe((res:Response)=>{
+        observer.next(res.json()["results"]);
+      });
+    });
+  }
+  getWeatherInfo(date:String):Observable<any>{
+    let url = "http://192.168.0.116"+"/dashbord/api/weather-info/"+date;
     return new Observable((observer)=>{
       this.http.get(url)
       .subscribe((res:Response)=>{

@@ -1,10 +1,8 @@
 <div class="row split">
   <div class="col s12 m8 split-item split-left">
-    <div class="card split-left__inner">
-      <div class="card-image">
-        <canvas #canvas class="ras-chart" width="450"></canvas>
-      </div>
-    </div>
+    <app-chart [labels]=label1 [datas]=datas1 [yAxes]=tempYAxes></app-chart>
+    <app-chart [labels]=label2 [datas]=datas2 [yAxes]=tempYAxes></app-chart>
+    <app-chart [labels]=label2 [datas]=datas3 [yAxes]=presureYAxes></app-chart>
   </div>
   <div class="col s12 m4 split-item split-right">
     <div class="collection">
